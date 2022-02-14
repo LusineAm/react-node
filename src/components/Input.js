@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Count() {
+function Input() {
     const [value, setValue] = useState("");
 
     return (
@@ -15,4 +15,4 @@ function Count() {
     )
 }
 
-export default Count;
+export default Input;
