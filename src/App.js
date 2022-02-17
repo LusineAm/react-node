@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./styles/App.css";
 import PostList from "./components/PostList";
 import MyButton from "./UI/button/MyButton";
@@ -10,25 +10,29 @@ function App() {
     { id: 2, title: "JS 2", body: "Description" },
     { id: 3, title: "JS 3", body: "Description" },
   ]);
-  const [title, setTitle] = useState('');
+  const [post, setPost] = useState({title: '', body: ''});
+
   const addNewPost = (e) => {
     e.preventDefault();
-
+    setPosts([...posts, {...post, id: Date.now()}]);
+    setPost({title: '', body: ''});
   }
 
   return (
     <div className="App">
-      <MyInput 
+      <MyInput
         placeholder='title'
         type='text'
-        value={title}
-        onChange={e => setTitle(e.target.value)}
+        value={post.title}
+        onChange={e => setPost({...post, title: e.target.value})}
       />
-      <MyInput 
+      <MyInput
         placeholder='description'
         type='text'
+        value={post.body}
+        onChange={e => setPost({...post, body: e.target.value})}
       />
-      <MyButton 
+      <MyButton
         onClick={addNewPost}
       >
         Add Post
