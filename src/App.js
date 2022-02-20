@@ -1,43 +1,49 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./styles/App.css";
 import PostList from "./components/PostList";
-import MyButton from "./UI/button/MyButton";
+import PostForm from "./components/PostForm";
+import MySelect from "./UI/select/MySelect";
 import MyInput from "./UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
 
 function App() {
   const [posts, setPosts] = useState([
-    { id: 1, title: "JS 1", body: "Description" },
-    { id: 2, title: "JS 2", body: "Description" },
-    { id: 3, title: "JS 3", body: "Description" },
+    { id: 1, title: "hi", body: "eng" },
+    { id: 2, title: "hello", body: "unitet stats" },
+    { id: 3, title: "hallo", body: "germany" },
   ]);
-  const [post, setPost] = useState({title: '', body: ''});
 
-  const addNewPost = (e) => {
-    e.preventDefault();
-    setPosts([...posts, {...post, id: Date.now()}]);
-    setPost({title: '', body: ''});
+  const [filter, setFilter] = useState({ sort: '', query: '' });
+
+  const sortedPosts = useMemo(() => {
+    console.log("ok")
+
+    if (filter.sort) {
+      return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
+    }
+    return posts;
+  }, [filter.sort, posts]);
+
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter(post => post.title.toLocaleLowerCase().includes(filter.query))
+  }, [filter.query, sortedPosts])
+
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost])
+  }
+  const removePost = (post) => {
+    setPosts(posts.filter(p => p.id !== post.id))
   }
 
   return (
     <div className="App">
-      <MyInput
-        placeholder='title'
-        type='text'
-        value={post.title}
-        onChange={e => setPost({...post, title: e.target.value})}
+      <PostForm create={createPost} />
+      <hr style={{ margin: '15px 0' }} />
+      <PostFilter
+        filter={filter}
+        setFilter={setFilter}
       />
-      <MyInput
-        placeholder='description'
-        type='text'
-        value={post.body}
-        onChange={e => setPost({...post, body: e.target.value})}
-      />
-      <MyButton
-        onClick={addNewPost}
-      >
-        Add Post
-      </MyButton>
-      <PostList posts={posts} title={"Post List 1"} />
+      <PostList remove={removePost} posts={sortedAndSearchedPosts} title={"Post List 1"} />
     </div>
   );
 }
