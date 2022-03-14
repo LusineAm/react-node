@@ -7,9 +7,10 @@ import "./styles/App.css";
 function App() {
   return (
     <BrowserRouter>
-      <Route path="/posts">
-        <Posts />
-      </Route>
+      <Routes>
+        <Route path="/about" element={<About />} />
+        <Route path="/posts" element={<Posts />} />
+      </Routes>
     </BrowserRouter>
   );
 }
